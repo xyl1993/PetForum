@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mails.mapper.MailMapper">
+	<insert id="sendMail" parameterType="mails.model.MailModel">
+	    insert into t_agreement (
+	        text,
+	        email,
+	        create_time,
+	        title
+	        )values(
+	        #{text},
+	        #{email},
+	        now(),
+	        #{title}
+        )
+	</insert>
+	<insert id="sendYzm">
+	    insert into t_yzm (
+	        user_id,
+	        yzm,
+	        create_time
+	        )values(
+	        #{userId},
+	        #{yzm},
+	        now()
+        )
+	</insert>
+	<update id="updateYzm">
+		update t_yzm set yzm = #{yzm},create_time=now() where user_id = #{userId}
+	</update>
+	<select id="getYzmByUserId" resultType="int">
+		select count(0) from t_yzm
+		<where>
+  			user_id = #{userId}
+		</where>
+	</select>
+</mapper>

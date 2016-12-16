@@ -1,0 +1,17 @@
+[{
+			"companyNum" : "1212",
+			"vehicleNum" : "222",
+			"kindNum" : "222222",
+			"childreArr" : [{
+						"name" : "wing",
+						"inputValue" : "2222222222222222222"
+					}]
+		}, {
+			"companyNum" : "121212",
+			"vehicleNum" : "23",
+			"kindNum" : "ewewer",
+			"childreArr" : [{
+						"name" : "wing",
+						"inputValue" : "232dwfewe"
+					}]
+		}]

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="topic.mapper.TopicMapper">
+	<resultMap id="topicMap" type="topic.model.TopicModel">
+		<id property="id" column="id" jdbcType="VARCHAR" />
+		<result property="userId" column="user_id" />
+		<result property="content" column="content" />
+		<result property="userName" column="user_name" />
+		<result property="createTime" column="create_time"/>
+		<result property="count" column="count"/>
+		<result property="headUrl" column="head_url"/>
+		<result property="lastReplayTime" column="last_replay_time"/>
+	</resultMap>
+	<resultMap id="ReplayTopicMap" type="topic.model.ReplayTopicModel">
+		<id property="id" column="id" jdbcType="VARCHAR" />
+		<result property="replayTime" column="replay_time" />
+		<result property="content" column="content" />
+		<result property="userName" column="user_name" />
+		<result property="headUrl" column="head_url"/>
+	</resultMap>
+	<insert id="sendTopic" parameterType="topic.model.TopicModel">
+		insert into t_topic (content,create_time,user_id,last_replay_time) values(
+		     #{content},now(),#{userId},now()
+		)
+	</insert>
+	<select id="getTopicList" resultMap="topicMap" parameterType="map" >
+		select a.id,a.content,a.create_time,a.user_id,a.last_replay_time,b.user_name,b.head_url ,count(c.id) as count
+		  from t_topic a 
+	      left join t_user_info b on a.user_id = b.id
+	      left join t_replay_topic c on a.id = c.topic_id
+		  GROUP BY a.last_replay_time DESC
+		  limit #{rowNum},#{pageSize}
+	</select>
+	<select id="getCount" resultType="int">
+		select count(1) from t_topic
+	</select>
+	<select id="getTopicDetail" parameterType = "int"  resultType="topic.model.TopicModel">
+		select a.id,a.content,a.create_time as createTime,a.user_id as userId,a.last_replay_time as lastReplayTime
+		,b.user_name as userName,b.head_url as headUrl ,count(c.id) as count
+		  from t_topic a 
+	      left join t_user_info b on a.user_id = b.id
+	      left join t_replay_topic c on a.id = c.topic_id
+	      where a.id = #{value}
+	</select>
+	<select id="getReplayList" resultMap="ReplayTopicMap" parameterType="map" >
+		select a.id,a.replay_time,a.content,b.user_name,b.head_url
+		  from t_replay_topic a
+		  left join t_user_info b on b.id = a.user_id
+		  where a.topic_id = #{id}
+		  GROUP BY a.replay_time DESC
+		  limit #{rowNum},#{pageSize}
+	</select>
+	<select id="getReplayCount" resultType="int" parameterType = "int">
+		select count(1) from t_replay_topic where topic_id = #{value}
+	</select>
+</mapper>
